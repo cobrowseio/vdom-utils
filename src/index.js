@@ -1,9 +1,5 @@
-import DiffBatcher from './DiffBatcher';
-import DiffCompressor from './DiffCompressor';
-import depthFirst from './depthFirst';
-
-export {
-    DiffBatcher,
-    DiffCompressor,
-    depthFirst
-};
+export DiffBatcher from './DiffBatcher';
+export DiffCompressor from './DiffCompressor';
+export CompressionError from './CompressionError';
+export VirtualDOM from './VirtualDOM';
+export depthFirst from './depthFirst';
