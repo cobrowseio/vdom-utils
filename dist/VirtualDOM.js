@@ -52,9 +52,9 @@ var VirtualDOM = function () {
             });
         }
     }, {
-        key: 'applyPatches',
-        value: function applyPatches(patches) {
-            this._dom = VirtualDOM.applyPatches(this._dom, patches);
+        key: 'applyPatch',
+        value: function applyPatch(patch) {
+            this._dom = VirtualDOM.applyPatch(this._dom, patch);
             return this;
         }
     }, {
@@ -73,8 +73,8 @@ var VirtualDOM = function () {
             return this._dom.scroll;
         }
     }], [{
-        key: 'applyPatches',
-        value: function applyPatches(document, patches) {
+        key: 'applyPatch',
+        value: function applyPatch(document, patch) {
             // first build an index of the nodes currently
             // in the tree so we can quickly look them up.
             var nodeIdMap = {};
@@ -85,9 +85,9 @@ var VirtualDOM = function () {
             // then apply the diffs to the existing nodes,
             // and also create new node records for discovered
             // nodes if we need to.
-            patches.forEach(function (patch) {
-                var existing = nodeIdMap[patch.id] || {};
-                nodeIdMap[patch.id] = _extends({}, existing, patch);
+            patch.forEach(function (diff) {
+                var existing = nodeIdMap[diff.id] || {};
+                nodeIdMap[diff.id] = _extends({}, existing, diff);
             });
 
             // then make sure all the node id's in the childNodes

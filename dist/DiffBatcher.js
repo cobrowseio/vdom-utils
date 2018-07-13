@@ -57,7 +57,7 @@ var DiffBatcher = function (_EventEmitter) {
         key: '_emitState',
         value: function _emitState() {
             if (this._batch.length) {
-                this.emit('changes', this.peek());
+                this.emit('patch', this.peek());
             }
         }
     }, {

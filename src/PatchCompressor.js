@@ -1,5 +1,5 @@
 
-export default class DiffCompressor {
+export default class PatchCompressor {
 
     static _merge(older={}, newer) {
         return {
