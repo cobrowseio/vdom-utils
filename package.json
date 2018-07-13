@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.1",
   "description": "Virtual DOM manipulation utils",
-  "main": "dist/index.js",
+  "main": "./dist/index.js",
   "scripts": {
     "build": "babel src --out-dir dist",
     "prepublishOnly": "npm run build",
