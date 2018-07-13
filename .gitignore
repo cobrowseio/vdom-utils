@@ -1,0 +1,13 @@
+.idea
+.DS_Store
+.sass-cache
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN
+logs
+*.log
+npm-debug.log*
+node_modules
+yarn.lock
+lib/
