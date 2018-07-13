@@ -5,15 +5,40 @@ export default class VirtualDOM {
 
     constructor(id) {
         this._id = id;
-        this._dom = { id: id };
+        this._dom = { id: id, childNodes:[] };
     }
 
     get id() {
         return this._id;
     }
 
+    get size() {
+        return this._dom.size;
+    }
+
+    get scroll() {
+        return this._dom.scroll;
+    }
+
+    html() {
+        return this._dom.childNodes[0];
+    }
+
+    head() {
+        const htmlNode = this.html();
+        if ((!htmlNode) || (!htmlNode.childNodes)) return null;
+        return htmlNode.childNodes.find(n => n.tagName === 'HEAD');
+    }
+
+    body() {
+        const htmlNode = this.html();
+        if ((!htmlNode) || (!htmlNode.childNodes)) return null;
+        return htmlNode.childNodes.find(n => n.tagName === 'BODY');
+    }
+
     applyPatches(patches) {
         this._dom = VirtualDOM.applyPatches(this._dom, patches);
+        return this;
     }
 
     static applyPatches(document, patches) {
@@ -21,7 +46,7 @@ export default class VirtualDOM {
         // in the tree so we can quickly look them up.
         const nodeIdMap = {};
         depthFirst(document, n => {
-            if (n.id) nodeIdMap[n.id] = n;
+            if (n.id) nodeIdMap[n.id] = { ...n };
         });
 
         // then apply the diffs to the existing nodes,

@@ -3,13 +3,12 @@
   "private": true,
   "version": "0.0.1",
   "description": "Virtual DOM manipulation utils",
-  "main": "src/index.js",
+  "main": "dist/index.js",
   "scripts": {
-      "build": "npm run lint && webpack --mode production",
-      "start": "npm run lint && webpack --progress --watch --mode development",
-      "prepublishOnly": "npm run build",
-      "lint": "eslint --ext .js .",
-      "test": "npm run-script lint && karma start --single-run --browsers ChromeHeadless karma.conf.js"
+    "build": "babel src --out-dir dist",
+    "prepublishOnly": "npm run build",
+    "lint": "eslint --ext .js .",
+    "test": "npm run-script lint && karma start --single-run --browsers ChromeHeadless karma.conf.js"
   },
   "repository": {
     "type": "git",
@@ -21,6 +20,7 @@
   },
   "homepage": "https://cobrowse.io",
   "devDependencies": {
+    "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
     "babel-eslint": "^8.2.3",
     "babel-loader": "^7.1.2",
@@ -40,7 +40,5 @@
     "webpack": "^4.15.1",
     "webpack-command": "^0.4.0"
   },
-  "dependencies": {
-    "uuid": "^3.3.2"
-  }
+  "dependencies": {}
 }
