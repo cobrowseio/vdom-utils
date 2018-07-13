@@ -18,8 +18,8 @@ describe('DiffBatcher', function(){
             batcher.push({ id:1 });
         }, 10);
         setTimeout(() => {
-            batcher.on('changes', changes => {
-                if (changes.length !== 3) throw new Error('wrong number of changes');
+            batcher.on('patch', patch => {
+                if (patch.length !== 3) throw new Error('wrong number of changes');
                 batcher.cleanup();
                 done();
             });

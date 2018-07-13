@@ -28,7 +28,7 @@ export default class DiffBatcher extends EventEmitter {
 
     _emitState() {
         if (this._batch.length) {
-            this.emit('changes', this.peek());
+            this.emit('patch', this.peek());
         }
     }
 

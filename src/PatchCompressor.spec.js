@@ -1,9 +1,9 @@
-import DiffCompressor from './DiffCompressor';
+import PatchCompressor from './PatchCompressor';
 
-describe('DiffBatcher', function(){
+describe('PatchCompressor', function(){
 
     it('should compress diffs', function(done) {
-        const diffs = [
+        const patch = [
             {
                 id: 1, thing:1, other:2, childNodes: [2]
             },
@@ -23,7 +23,7 @@ describe('DiffBatcher', function(){
                 id: 4, thing:1, other: 1
             }
         ];
-        const result = DiffCompressor.compress(diffs);
+        const result = PatchCompressor.compress(patch);
         if (result.length !== 4) throw new Error('wrong number of nodes');
 
         const node1 = result.find(n => n.id === 1);
@@ -45,7 +45,7 @@ describe('DiffBatcher', function(){
     });
 
     it('should clear attributes for null values', function(done) {
-        const diffs = [
+        const patch = [
             {
                 id: 1, thing:1, other:2, childNodes: [2]
             },
@@ -56,7 +56,7 @@ describe('DiffBatcher', function(){
                 id: 1, thing: null
             }
         ];
-        const result = DiffCompressor.compress(diffs);
+        const result = PatchCompressor.compress(patch);
         if (result.length !== 2) throw new Error('wrong number of nodes');
 
         const node1 = result.find(n => n.id === 1);
