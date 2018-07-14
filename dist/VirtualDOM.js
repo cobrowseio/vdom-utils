@@ -72,6 +72,11 @@ var VirtualDOM = function () {
         get: function get() {
             return this._dom.scroll;
         }
+    }, {
+        key: 'childNodes',
+        get: function get() {
+            return this._dom.childNodes || [];
+        }
     }], [{
         key: 'applyPatch',
         value: function applyPatch(document, patch) {

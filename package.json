@@ -37,8 +37,12 @@
     "karma-mocha": "^1.3.0",
     "karma-webpack": "^3.0.0",
     "mocha": "*",
+    "pre-commit": "^1.2.2",
     "webpack": "^4.15.1",
     "webpack-command": "^0.4.0"
   },
-  "dependencies": {}
+  "dependencies": {},
+  "pre-commit": [
+      "build"
+  ]
 }
