@@ -20,6 +20,10 @@ export default class VirtualDOM {
         return this._dom.scroll;
     }
 
+    get childNodes() {
+        return this._dom.childNodes || [];
+    }
+
     html() {
         return this._dom.childNodes[0];
     }
