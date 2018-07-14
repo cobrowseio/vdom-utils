@@ -12,32 +12,8 @@ export default class VirtualDOM {
         return this._id;
     }
 
-    get size() {
-        return this._dom.size;
-    }
-
-    get scroll() {
-        return this._dom.scroll;
-    }
-
-    get childNodes() {
-        return this._dom.childNodes || [];
-    }
-
-    html() {
-        return this._dom.childNodes[0];
-    }
-
-    head() {
-        const htmlNode = this.html();
-        if ((!htmlNode) || (!htmlNode.childNodes)) return null;
-        return htmlNode.childNodes.find(n => n.tagName === 'HEAD');
-    }
-
-    body() {
-        const htmlNode = this.html();
-        if ((!htmlNode) || (!htmlNode.childNodes)) return null;
-        return htmlNode.childNodes.find(n => n.tagName === 'BODY');
+    get document() {
+        return this._dom;
     }
 
     applyPatch(patch) {
