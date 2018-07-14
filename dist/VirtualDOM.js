@@ -29,29 +29,6 @@ var VirtualDOM = function () {
     }
 
     _createClass(VirtualDOM, [{
-        key: 'html',
-        value: function html() {
-            return this._dom.childNodes[0];
-        }
-    }, {
-        key: 'head',
-        value: function head() {
-            var htmlNode = this.html();
-            if (!htmlNode || !htmlNode.childNodes) return null;
-            return htmlNode.childNodes.find(function (n) {
-                return n.tagName === 'HEAD';
-            });
-        }
-    }, {
-        key: 'body',
-        value: function body() {
-            var htmlNode = this.html();
-            if (!htmlNode || !htmlNode.childNodes) return null;
-            return htmlNode.childNodes.find(function (n) {
-                return n.tagName === 'BODY';
-            });
-        }
-    }, {
         key: 'applyPatch',
         value: function applyPatch(patch) {
             this._dom = VirtualDOM.applyPatch(this._dom, patch);
@@ -63,19 +40,9 @@ var VirtualDOM = function () {
             return this._id;
         }
     }, {
-        key: 'size',
+        key: 'document',
         get: function get() {
-            return this._dom.size;
-        }
-    }, {
-        key: 'scroll',
-        get: function get() {
-            return this._dom.scroll;
-        }
-    }, {
-        key: 'childNodes',
-        get: function get() {
-            return this._dom.childNodes || [];
+            return this._dom;
         }
     }], [{
         key: 'applyPatch',
