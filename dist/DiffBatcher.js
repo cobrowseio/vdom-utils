@@ -37,6 +37,7 @@ var DiffBatcher = function (_EventEmitter) {
         value: function cleanup() {
             this.removeAllListeners();
             clearTimeout(this._emitTimeout);
+            clearTimeout(this._shortEmitTimeout);
         }
     }, {
         key: 'push',
@@ -46,11 +47,19 @@ var DiffBatcher = function (_EventEmitter) {
             if (!Array.isArray(diff)) diff = [diff];
             this._batch = [].concat(_toConsumableArray(this._batch), _toConsumableArray(diff));
             if (!this._emitTimeout) {
-                this._emitState();
+                // schedule next emit for a little while later
                 this._emitTimeout = setTimeout(function () {
                     _this2._emitTimeout = false;
                     _this2._emitState();
                 }, this.options.throttle);
+                // also emit fairly immediately to keep things
+                // feeling responsive
+                if (!this._shortEmitTimeout) {
+                    this._shortEmitTimeout = setTimeout(function () {
+                        _this2._shortEmitTimeout = false;
+                        _this2._emitState();
+                    }, 10);
+                }
             }
         }
     }, {

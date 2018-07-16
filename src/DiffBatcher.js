@@ -12,17 +12,26 @@ export default class DiffBatcher extends EventEmitter {
     cleanup() {
         this.removeAllListeners();
         clearTimeout(this._emitTimeout);
+        clearTimeout(this._shortEmitTimeout);
     }
 
     push(diff) {
         if (!Array.isArray(diff)) diff = [diff];
         this._batch = [...this._batch, ...diff];
         if (!this._emitTimeout) {
-            this._emitState();
+            // schedule next emit for a little while later
             this._emitTimeout = setTimeout(() => {
                 this._emitTimeout = false;
                 this._emitState();
             }, this.options.throttle);
+            // also emit fairly immediately to keep things
+            // feeling responsive
+            if (!this._shortEmitTimeout) {
+                this._shortEmitTimeout = setTimeout(() => {
+                    this._shortEmitTimeout = false;
+                    this._emitState();
+                }, 10);
+            }
         }
     }
 
