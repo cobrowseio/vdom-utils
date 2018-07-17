@@ -17,6 +17,7 @@ var MutatingEventObserver = function () {
         this.onValueChangedEvent = this.onValueChangedEvent.bind(this);
 
         this._observing = [];
+        this._windows = [];
     }
 
     _createClass(MutatingEventObserver, [{
@@ -27,13 +28,13 @@ var MutatingEventObserver = function () {
             root.addEventListener('keydown', this.onValueChangedEvent, { capture: true, passive: true });
             root.addEventListener('keyup', this.onValueChangedEvent, { capture: true, passive: true });
             root.addEventListener('keypress', this.onValueChangedEvent, { capture: true, passive: true });
+            this._observing.push(root);
 
             var document = root.ownerDocument || root;
             var window = document.defaultView;
             window.addEventListener('hashchange', this.onEvent, { capture: true, passive: true });
             window.addEventListener('resize', this.onEvent, { capture: true, passive: true });
-
-            this._observing.push(root);
+            this._windows.push(window);
         }
     }, {
         key: 'disconnect',
@@ -46,14 +47,14 @@ var MutatingEventObserver = function () {
                 root.removeEventListener('keydown', _this.onValueChangedEvent, { capture: true, passive: true });
                 root.removeEventListener('keyup', _this.onValueChangedEvent, { capture: true, passive: true });
                 root.removeEventListener('keypress', _this.onValueChangedEvent, { capture: true, passive: true });
+            });
+            this._observing = [];
 
-                var document = root.ownerDocument || root;
-                var window = document.defaultView;
+            this._windows.forEach(function (window) {
                 window.removeEventListener('hashchange', _this.onEvent, { capture: true, passive: true });
                 window.removeEventListener('resize', _this.onEvent, { capture: true, passive: true });
             });
-
-            this._observing = [];
+            this._windows = [];
         }
     }, {
         key: 'onValueChangedEvent',

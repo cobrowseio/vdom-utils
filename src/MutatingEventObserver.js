@@ -7,6 +7,7 @@ export default class MutatingEventObserver {
         this.onValueChangedEvent = this.onValueChangedEvent.bind(this);
 
         this._observing = [];
+        this._windows = [];
     }
 
     observe(root) {
@@ -15,13 +16,13 @@ export default class MutatingEventObserver {
         root.addEventListener('keydown', this.onValueChangedEvent, { capture: true, passive:true });
         root.addEventListener('keyup', this.onValueChangedEvent, { capture: true, passive:true });
         root.addEventListener('keypress', this.onValueChangedEvent, { capture: true, passive:true });
+        this._observing.push(root);
 
         const document = root.ownerDocument || root;
         const window = document.defaultView;
         window.addEventListener('hashchange', this.onEvent, { capture: true, passive:true });
         window.addEventListener('resize', this.onEvent, { capture: true, passive:true });
-
-        this._observing.push(root);
+        this._windows.push(window);
     }
 
     disconnect() {
@@ -31,14 +32,14 @@ export default class MutatingEventObserver {
             root.removeEventListener('keydown', this.onValueChangedEvent, { capture: true, passive:true });
             root.removeEventListener('keyup', this.onValueChangedEvent, { capture: true, passive:true });
             root.removeEventListener('keypress', this.onValueChangedEvent, { capture: true, passive:true });
+        });
+        this._observing = [];
 
-            const document = root.ownerDocument || root;
-            const window = document.defaultView;
+        this._windows.forEach(window => {
             window.removeEventListener('hashchange', this.onEvent, { capture: true, passive:true });
             window.removeEventListener('resize', this.onEvent, { capture: true, passive:true });
         });
-
-        this._observing = [];
+        this._windows = [];
     }
 
     onValueChangedEvent(e) {
