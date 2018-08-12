@@ -41,8 +41,10 @@
     "webpack": "^4.15.1",
     "webpack-command": "^0.4.0"
   },
-  "dependencies": {},
+  "dependencies": {
+    "fast-deep-equal": "^2.0.1"
+  },
   "pre-commit": [
-      "build"
+    "build"
   ]
 }

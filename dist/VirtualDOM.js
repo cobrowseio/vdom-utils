@@ -51,21 +51,23 @@ var VirtualDOM = function () {
             // in the tree so we can quickly look them up.
             var nodeIdMap = {};
             (0, _depthFirst2.default)(document, function (n) {
-                if (n.id) nodeIdMap[n.id] = _extends({}, n);
+                if (!n.id) console.warning('node missing id', n);else nodeIdMap[n.id] = _extends({}, n);
             });
 
             // then apply the diffs to the existing nodes,
             // and also create new node records for discovered
             // nodes if we need to.
             patch.forEach(function (diff) {
-                var existing = nodeIdMap[diff.id] || {};
-                nodeIdMap[diff.id] = _extends({}, existing, diff);
+                if (!diff.id) console.warning('diff missing id', diff);else {
+                    var existing = nodeIdMap[diff.id] || {};
+                    nodeIdMap[diff.id] = _extends({}, existing, diff);
+                }
             });
 
             // then make sure all the node id's in the childNodes
             // array have been expanded into their denormalized form
             Object.values(nodeIdMap).forEach(function (n) {
-                n.childNodes = n.childNodes.map(function (child) {
+                n.childNodes = (n.childNodes || []).map(function (child) {
                     var id = child.id || child;
                     if (!nodeIdMap[id]) {
                         throw new _CompressionError2.default('denormalisation failed for ' + id);

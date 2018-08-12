@@ -22,7 +22,8 @@ describe('PatchCompressor', function () {
         }, {
             id: 4, thing: 1, other: 1
         }];
-        var result = _PatchCompressor2.default.compress(patch);
+        var compression = new _PatchCompressor2.default();
+        var result = compression.compress(patch);
         if (result.length !== 4) throw new Error('wrong number of nodes');
 
         var node1 = result.find(function (n) {
@@ -59,7 +60,8 @@ describe('PatchCompressor', function () {
         }, {
             id: 1, thing: null
         }];
-        var result = _PatchCompressor2.default.compress(patch);
+        var compression = new _PatchCompressor2.default();
+        var result = compression.compress(patch);
         if (result.length !== 2) throw new Error('wrong number of nodes');
 
         var node1 = result.find(function (n) {

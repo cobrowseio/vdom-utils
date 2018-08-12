@@ -23,7 +23,8 @@ describe('PatchCompressor', function(){
                 id: 4, thing:1, other: 1
             }
         ];
-        const result = PatchCompressor.compress(patch);
+        const compression = new PatchCompressor();
+        const result = compression.compress(patch);
         if (result.length !== 4) throw new Error('wrong number of nodes');
 
         const node1 = result.find(n => n.id === 1);
@@ -56,7 +57,8 @@ describe('PatchCompressor', function(){
                 id: 1, thing: null
             }
         ];
-        const result = PatchCompressor.compress(patch);
+        const compression = new PatchCompressor();
+        const result = compression.compress(patch);
         if (result.length !== 2) throw new Error('wrong number of nodes');
 
         const node1 = result.find(n => n.id === 1);
