@@ -1,83 +1,104 @@
-'use strict';
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+  value: true
 });
+exports.default = void 0;
 
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+require("core-js/modules/es6.object.define-property");
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+require("core-js/modules/es7.object.values");
 
-var _fastDeepEqual = require('fast-deep-equal');
+require("core-js/modules/es6.array.for-each");
 
-var _fastDeepEqual2 = _interopRequireDefault(_fastDeepEqual);
+require("core-js/modules/web.dom.iterable");
+
+require("core-js/modules/es6.array.iterator");
+
+require("core-js/modules/es6.object.keys");
+
+require("core-js/modules/es6.array.map");
+
+require("core-js/modules/es6.array.filter");
+
+require("core-js/modules/es6.array.reduce");
+
+var _fastDeepEqual = _interopRequireDefault(require("fast-deep-equal"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var PatchCompressor = function () {
-    function PatchCompressor() {
-        _classCallCheck(this, PatchCompressor);
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
-        this.state = {};
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var PatchCompressor =
+/*#__PURE__*/
+function () {
+  function PatchCompressor() {
+    _classCallCheck(this, PatchCompressor);
+
+    this.state = {};
+  }
+
+  _createClass(PatchCompressor, [{
+    key: "difference",
+    value: function difference(object, base) {
+      if (!base) return object;
+      return Object.keys(object).map(function (key) {
+        if ((0, _fastDeepEqual.default)(object[key], base[key])) return false;
+        return _defineProperty({}, key, object[key]);
+      }).filter(function (v) {
+        return v;
+      }).reduce(function (a, b) {
+        return _objectSpread({}, a, b);
+      }, {});
     }
+  }, {
+    key: "compress",
+    value: function compress(patch) {
+      var _this = this;
 
-    _createClass(PatchCompressor, [{
-        key: 'difference',
-        value: function difference(object, base) {
-            if (!base) return object;
-            return Object.keys(object).map(function (key) {
-                if ((0, _fastDeepEqual2.default)(object[key], base[key])) return false;
-                return _defineProperty({}, key, object[key]);
-            }).filter(function (v) {
-                return v;
-            }).reduce(function (a, b) {
-                return _extends({}, a, b);
-            }, {});
-        }
-    }, {
-        key: 'compress',
-        value: function compress(patch) {
-            var _this = this;
+      var nodes = {};
+      patch.forEach(function (diff) {
+        // generate the newest node state for each node altered by the patch
+        nodes[diff.id] = _objectSpread({}, nodes[diff.id], diff);
+      }); // then work out what's actually changed since the last state was persisted
 
-            var nodes = {};
-            patch.forEach(function (diff) {
-                // generate the newest node state for each node altered by the patch
-                nodes[diff.id] = _extends({}, nodes[diff.id], diff);
-            });
+      var compressed = Object.values(nodes).map(function (node) {
+        var diff = _this.difference(node, _this.state[node.id]);
 
-            // then work out what's actually changed since the last state was persisted
-            var compressed = Object.values(nodes).map(function (node) {
-                var diff = _this.difference(node, _this.state[node.id]);
-                if (Object.keys(diff).length === 0) return false;
-                return _extends({ id: node.id }, diff);
-            });
+        if (Object.keys(diff).length === 0) return false;
+        return _objectSpread({
+          id: node.id
+        }, diff);
+      });
+      return Object.values(compressed).filter(function (v) {
+        return v;
+      });
+    }
+  }, {
+    key: "persist",
+    value: function persist(patch) {
+      var _this2 = this;
 
-            return Object.values(compressed).filter(function (v) {
-                return v;
-            });
-        }
-    }, {
-        key: 'persist',
-        value: function persist(patch) {
-            var _this2 = this;
+      patch.forEach(function (diff) {
+        _this2.state[diff.id] = _objectSpread({}, _this2.state[diff.id], diff);
+      });
+    }
+  }, {
+    key: "clear",
+    value: function clear() {
+      this.state = {};
+    }
+  }]);
 
-            patch.forEach(function (diff) {
-                _this2.state[diff.id] = _extends({}, _this2.state[diff.id], diff);
-            });
-        }
-    }, {
-        key: 'clear',
-        value: function clear() {
-            this.state = {};
-        }
-    }]);
-
-    return PatchCompressor;
+  return PatchCompressor;
 }();
 
 exports.default = PatchCompressor;
-module.exports = exports['default'];

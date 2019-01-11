@@ -1,49 +1,73 @@
-'use strict';
+"use strict";
+
+require("core-js/modules/es6.object.define-property");
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+  value: true
 });
-exports.PropertyObserver = exports.MutatingEventObserver = exports.isxdoc = exports.depthFirst = exports.VirtualDOM = exports.CompressionError = exports.PatchCompressor = exports.DiffBatcher = undefined;
+Object.defineProperty(exports, "DiffBatcher", {
+  enumerable: true,
+  get: function get() {
+    return _DiffBatcher.default;
+  }
+});
+Object.defineProperty(exports, "PatchCompressor", {
+  enumerable: true,
+  get: function get() {
+    return _PatchCompressor.default;
+  }
+});
+Object.defineProperty(exports, "CompressionError", {
+  enumerable: true,
+  get: function get() {
+    return _CompressionError.default;
+  }
+});
+Object.defineProperty(exports, "VirtualDOM", {
+  enumerable: true,
+  get: function get() {
+    return _VirtualDOM.default;
+  }
+});
+Object.defineProperty(exports, "depthFirst", {
+  enumerable: true,
+  get: function get() {
+    return _depthFirst.default;
+  }
+});
+Object.defineProperty(exports, "isxdoc", {
+  enumerable: true,
+  get: function get() {
+    return _isxdoc.default;
+  }
+});
+Object.defineProperty(exports, "MutatingEventObserver", {
+  enumerable: true,
+  get: function get() {
+    return _MutatingEventObserver.default;
+  }
+});
+Object.defineProperty(exports, "PropertyObserver", {
+  enumerable: true,
+  get: function get() {
+    return _PropertyObserver.default;
+  }
+});
 
-var _DiffBatcher = require('./DiffBatcher');
+var _DiffBatcher = _interopRequireDefault(require("./DiffBatcher"));
 
-var _DiffBatcher2 = _interopRequireDefault(_DiffBatcher);
+var _PatchCompressor = _interopRequireDefault(require("./PatchCompressor"));
 
-var _PatchCompressor = require('./PatchCompressor');
+var _CompressionError = _interopRequireDefault(require("./CompressionError"));
 
-var _PatchCompressor2 = _interopRequireDefault(_PatchCompressor);
+var _VirtualDOM = _interopRequireDefault(require("./VirtualDOM"));
 
-var _CompressionError = require('./CompressionError');
+var _depthFirst = _interopRequireDefault(require("./depthFirst"));
 
-var _CompressionError2 = _interopRequireDefault(_CompressionError);
+var _isxdoc = _interopRequireDefault(require("./isxdoc"));
 
-var _VirtualDOM = require('./VirtualDOM');
+var _MutatingEventObserver = _interopRequireDefault(require("./MutatingEventObserver"));
 
-var _VirtualDOM2 = _interopRequireDefault(_VirtualDOM);
-
-var _depthFirst = require('./depthFirst');
-
-var _depthFirst2 = _interopRequireDefault(_depthFirst);
-
-var _isxdoc = require('./isxdoc');
-
-var _isxdoc2 = _interopRequireDefault(_isxdoc);
-
-var _MutatingEventObserver = require('./MutatingEventObserver');
-
-var _MutatingEventObserver2 = _interopRequireDefault(_MutatingEventObserver);
-
-var _PropertyObserver = require('./PropertyObserver');
-
-var _PropertyObserver2 = _interopRequireDefault(_PropertyObserver);
+var _PropertyObserver = _interopRequireDefault(require("./PropertyObserver"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-exports.DiffBatcher = _DiffBatcher2.default;
-exports.PatchCompressor = _PatchCompressor2.default;
-exports.CompressionError = _CompressionError2.default;
-exports.VirtualDOM = _VirtualDOM2.default;
-exports.depthFirst = _depthFirst2.default;
-exports.isxdoc = _isxdoc2.default;
-exports.MutatingEventObserver = _MutatingEventObserver2.default;
-exports.PropertyObserver = _PropertyObserver2.default;

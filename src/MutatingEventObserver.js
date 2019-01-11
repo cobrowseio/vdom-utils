@@ -20,9 +20,11 @@ export default class MutatingEventObserver {
 
         const document = root.ownerDocument || root;
         const window = document.defaultView;
-        window.addEventListener('hashchange', this.onEvent, { capture: true, passive:true });
-        window.addEventListener('resize', this.onEvent, { capture: true, passive:true });
-        this._windows.push(window);
+        if (window) {
+            window.addEventListener('hashchange', this.onEvent, { capture: true, passive:true });
+            window.addEventListener('resize', this.onEvent, { capture: true, passive:true });
+            this._windows.push(window);
+        }
     }
 
     disconnect() {
