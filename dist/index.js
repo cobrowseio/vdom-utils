@@ -41,12 +41,6 @@ Object.defineProperty(exports, "isxdoc", {
     return _isxdoc.default;
   }
 });
-Object.defineProperty(exports, "MutatingEventObserver", {
-  enumerable: true,
-  get: function get() {
-    return _MutatingEventObserver.default;
-  }
-});
 Object.defineProperty(exports, "PropertyObserver", {
   enumerable: true,
   get: function get() {
@@ -65,8 +59,6 @@ var _VirtualDOM = _interopRequireDefault(require("./VirtualDOM"));
 var _depthFirst = _interopRequireDefault(require("./depthFirst"));
 
 var _isxdoc = _interopRequireDefault(require("./isxdoc"));
-
-var _MutatingEventObserver = _interopRequireDefault(require("./MutatingEventObserver"));
 
 var _PropertyObserver = _interopRequireDefault(require("./PropertyObserver"));
 
