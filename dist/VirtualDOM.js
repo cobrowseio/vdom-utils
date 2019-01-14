@@ -73,7 +73,7 @@ function () {
       // in the tree so we can quickly look them up.
       var nodeIdMap = {};
       (0, _depthFirst.default)(document, function (n) {
-        if (!n.id) console.warning('node missing id', n);else nodeIdMap[n.id] = _objectSpread({}, n);
+        if (!n.id) console.warning('node missing id', n);else nodeIdMap[n.id] = n;
       }); // then apply the diffs to the existing nodes,
       // and also create new node records for discovered
       // nodes if we need to.

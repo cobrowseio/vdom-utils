@@ -27,7 +27,7 @@ export default class VirtualDOM {
         const nodeIdMap = {};
         depthFirst(document, n => {
             if (!n.id) console.warning('node missing id', n);
-            else nodeIdMap[n.id] = { ...n };
+            else nodeIdMap[n.id] = n;
         });
 
         // then apply the diffs to the existing nodes,
