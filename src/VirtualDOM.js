@@ -44,13 +44,24 @@ export default class VirtualDOM {
         // then make sure all the node id's in the childNodes
         // array have been expanded into their denormalized form
         Object.values(nodeIdMap).forEach(n => {
-            n.childNodes = (n.childNodes||[]).map(child => {
+            n.childNodes = n.childNodes || [];
+            for (let i = 0; i < n.childNodes; i += 1) {
+                const child = n.childNodes[i];
+                // if child.id exists, the node hasn't been normalised
+                // so do it now.
+                if (child.id) {
+                    // replace the object in the array with the id
+                    n.childNodes[i] = child.id;
+                    // also make sure the array object equality check will
+                    // return false on shallow comparison.
+                    n.childNodes = [...n.childNodes];
+                }
+                // validate the child node actually exists
                 const id = child.id || child;
                 if (!nodeIdMap[id]) {
-                    throw new CompressionError(`denormalisation failed for ${id}`);
+                    throw new CompressionError(`denormalisation failed for child ${id}`, n);
                 }
-                return nodeIdMap[id];
-            });
+            }
         });
 
         return nodeIdMap[document.id];

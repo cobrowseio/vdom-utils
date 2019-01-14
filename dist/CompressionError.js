@@ -16,16 +16,22 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 var CompressionError =
 /*#__PURE__*/
 function () {
-  function CompressionError(message) {
+  function CompressionError(message, node) {
     _classCallCheck(this, CompressionError);
 
     this._message = message;
+    this._node = node;
   }
 
   _createClass(CompressionError, [{
     key: "message",
     get: function get() {
       return this._message;
+    }
+  }, {
+    key: "node",
+    get: function get() {
+      return this._node;
     }
   }]);
 

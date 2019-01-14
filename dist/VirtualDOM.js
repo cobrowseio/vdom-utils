@@ -5,13 +5,25 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
+require("core-js/modules/es6.string.iterator");
+
+require("core-js/modules/es6.array.from");
+
+require("core-js/modules/es6.regexp.to-string");
+
+require("core-js/modules/es6.date.to-string");
+
+require("core-js/modules/es7.symbol.async-iterator");
+
+require("core-js/modules/es6.symbol");
+
+require("core-js/modules/es6.array.is-array");
+
 require("core-js/modules/es6.array.filter");
 
 require("core-js/modules/es6.object.keys");
 
 require("core-js/modules/es6.object.define-property");
-
-require("core-js/modules/es6.array.map");
 
 require("core-js/modules/es6.array.iterator");
 
@@ -26,6 +38,14 @@ var _depthFirst = _interopRequireDefault(require("./depthFirst"));
 var _CompressionError = _interopRequireDefault(require("./CompressionError"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
+
+function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
 
@@ -87,15 +107,27 @@ function () {
       // array have been expanded into their denormalized form
 
       Object.values(nodeIdMap).forEach(function (n) {
-        n.childNodes = (n.childNodes || []).map(function (child) {
+        n.childNodes = n.childNodes || [];
+
+        for (var i = 0; i < n.childNodes; i += 1) {
+          var child = n.childNodes[i]; // if child.id exists, the node hasn't been normalised
+          // so do it now.
+
+          if (child.id) {
+            // replace the object in the array with the id
+            n.childNodes[i] = child.id; // also make sure the array object equality check will
+            // return false on shallow comparison.
+
+            n.childNodes = _toConsumableArray(n.childNodes);
+          } // validate the child node actually exists
+
+
           var id = child.id || child;
 
           if (!nodeIdMap[id]) {
-            throw new _CompressionError.default("denormalisation failed for ".concat(id));
+            throw new _CompressionError.default("denormalisation failed for child ".concat(id), n);
           }
-
-          return nodeIdMap[id];
-        });
+        }
       });
       return nodeIdMap[document.id];
     }
