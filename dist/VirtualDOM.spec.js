@@ -1,5 +1,7 @@
 "use strict";
 
+require("core-js/modules/es6.array.map");
+
 var _depthFirst = _interopRequireDefault(require("./depthFirst"));
 
 var _VirtualDOM = _interopRequireDefault(require("./VirtualDOM"));
@@ -73,5 +75,67 @@ describe('VirtualDOM', function () {
     if (newerFour.value !== 'FOUR') throw new Error('expecting 4 value to be FOUR');
     if (newerOne === startOne) throw new Error('expecting change to 1');
     if (newerRoot === startRoot) throw new Error('expecting change to root');
+  });
+  it('should respect equaility checking when removing nodes', function () {
+    dom.applyPatch(patch);
+    dom.applyPatch([{
+      id: 'root',
+      childNodes: [1, 2]
+    }]);
+    var newChildren = dom.document.childNodes.map(function (n) {
+      return n.id;
+    });
+    if (newChildren.join(' ') !== [1, 2].join(' ')) throw new Error('wrong child nodes');
+  });
+  it('should respect equaility checking when removing nodes in tree', function () {
+    dom.applyPatch(patch);
+    dom.applyPatch([{
+      id: 5,
+      childNodes: []
+    }, {
+      id: 1,
+      childNodes: [4, 5]
+    }]);
+    var newOne = dom.document.childNodes[0];
+    if (newOne.childNodes.map(function (n) {
+      return n.id;
+    }).join(' ') !== [4, 5].join(' ')) throw new Error('wrong child nodes');
+  });
+  it('should respect equaility checking when replacing nodes in tree', function () {
+    dom.applyPatch(patch);
+    dom.applyPatch([{
+      id: 5,
+      childNodes: []
+    }, {
+      id: 1,
+      childNodes: [5]
+    }]);
+    var newOne = dom.document.childNodes[0];
+    if (newOne.childNodes.map(function (n) {
+      return n.id;
+    }).join(' ') !== [5].join(' ')) throw new Error('wrong child nodes');
+  });
+  it('should respect equaility checking when re-adding nodes in tree', function () {
+    dom.applyPatch(patch);
+    dom.applyPatch([{
+      id: 5,
+      childNodes: []
+    }, {
+      id: 1,
+      childNodes: [4]
+    }, {
+      id: 1,
+      childNodes: [4, 5]
+    }, {
+      id: 1,
+      childNodes: [4]
+    }, {
+      id: 1,
+      childNodes: [4, 5]
+    }]);
+    var newOne = dom.document.childNodes[0];
+    if (newOne.childNodes.map(function (n) {
+      return n.id;
+    }).join(' ') !== [4, 5].join(' ')) throw new Error('wrong child nodes');
   });
 });

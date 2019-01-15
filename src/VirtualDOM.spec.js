@@ -8,7 +8,7 @@ describe('VirtualDOM', function(){
         { id: 1, value: 'one', childNodes: [4] },
         { id: 2, value: 'two' },
         { id: 3, value: 'three' },
-        { id: 4, value: 'four' }
+        { id: 4, value: 'four' },
     ];
 
 
@@ -60,6 +60,34 @@ describe('VirtualDOM', function(){
         if (newerFour.value !== 'FOUR') throw new Error('expecting 4 value to be FOUR');
         if (newerOne === startOne) throw new Error('expecting change to 1');
         if (newerRoot === startRoot) throw new Error('expecting change to root');
+    });
+
+    it('should respect equaility checking when removing nodes', function() {
+        dom.applyPatch(patch);
+        dom.applyPatch([{id:'root', childNodes:[1,2]}]);
+        const newChildren = dom.document.childNodes.map(n => n.id);
+        if (newChildren.join(' ') !== [1,2].join(' ')) throw new Error('wrong child nodes');
+    });
+
+    it('should respect equaility checking when removing nodes in tree', function() {
+        dom.applyPatch(patch);
+        dom.applyPatch([{id:5, childNodes:[]}, {id:1, childNodes:[4, 5]}]);
+        const newOne = dom.document.childNodes[0];
+        if (newOne.childNodes.map(n => n.id).join(' ') !== [4,5].join(' ')) throw new Error('wrong child nodes');
+    });
+
+    it('should respect equaility checking when replacing nodes in tree', function() {
+        dom.applyPatch(patch);
+        dom.applyPatch([{ id: 5, childNodes:[]}, {id:1, childNodes:[5]}]);
+        const newOne = dom.document.childNodes[0];
+        if (newOne.childNodes.map(n => n.id).join(' ') !== [5].join(' ')) throw new Error('wrong child nodes');
+    });
+
+    it('should respect equaility checking when re-adding nodes in tree', function() {
+        dom.applyPatch(patch);
+        dom.applyPatch([{ id: 5, childNodes:[]}, {id:1, childNodes:[4]}, {id:1, childNodes:[4, 5]}, {id:1, childNodes:[4]}, {id:1, childNodes:[4,5]}]);
+        const newOne = dom.document.childNodes[0];
+        if (newOne.childNodes.map(n => n.id).join(' ') !== [4,5].join(' ')) throw new Error('wrong child nodes');
     });
 
 });

@@ -7,6 +7,8 @@ exports.default = void 0;
 
 require("core-js/modules/es6.array.filter");
 
+require("core-js/modules/es6.object.keys");
+
 require("core-js/modules/es6.object.define-property");
 
 require("core-js/modules/es6.array.reduce");
@@ -15,7 +17,7 @@ require("core-js/modules/es6.array.map");
 
 require("core-js/modules/es6.array.iterator");
 
-require("core-js/modules/es6.object.keys");
+require("core-js/modules/es7.object.values");
 
 require("core-js/modules/web.dom.iterable");
 
@@ -91,23 +93,23 @@ function () {
       // arrays have been expanded into their denormalized form
       // and the childNodes arrays are using the modified nodes
 
-      Object.keys(modifiedNodesMap).forEach(function (nid) {
-        var n = nodeIdMap[nid];
+      Object.values(nodeIdMap).forEach(function (n) {
         n.childNodes = (n.childNodes || []).map(function (child) {
           var id = child.id || child;
-
-          if (!nodeIdMap[id]) {
-            throw new _CompressionError.default("denormalisation failed for child ".concat(id), n);
-          }
-
-          return nodeIdMap[id];
+          var node = nodeIdMap[id];
+          if (!node) throw new _CompressionError.default("denormalisation failed for child ".concat(id), n);
+          return node;
         });
       }); // for all modified nodes we want to make sure
       // all parent nodes also appear changed on equalty
       // comparison
 
       var root = nodeIdMap[document.id];
-      (0, _depthFirst.depthFirstPostOrder)(root, function (n, children) {
+      var result = (0, _depthFirst.depthFirstPostOrder)(root, function (n, children) {
+        // make sure we're using any updated nodes returned from
+        // our children
+        n.childNodes = children; // work out of any of our chidren were modified
+
         var modified = children.map(function (c) {
           return modifiedNodesMap[c.id];
         });
@@ -121,14 +123,12 @@ function () {
           modifiedNodesMap[n.id] = true; // if the node was modified or a child of the node was modified
           // then we need to ensure the current node will fail equality checks
 
-          nodeIdMap[n.id] = _objectSpread({}, n, {
-            childNodes: children
-          });
+          return _objectSpread({}, n);
         }
 
-        return nodeIdMap[n.id];
+        return n;
       });
-      return nodeIdMap[document.id];
+      return result;
     }
   }]);
 

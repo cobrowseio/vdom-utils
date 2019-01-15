@@ -46,14 +46,12 @@ export default class VirtualDOM {
         // then make sure all the node id's in the childNodes
         // arrays have been expanded into their denormalized form
         // and the childNodes arrays are using the modified nodes
-        Object.keys(modifiedNodesMap).forEach(nid => {
-            const n = nodeIdMap[nid];
+        Object.values(nodeIdMap).forEach(n => {
             n.childNodes = (n.childNodes||[]).map(child => {
                 const id = child.id || child;
-                if (!nodeIdMap[id]) {
-                    throw new CompressionError(`denormalisation failed for child ${id}`, n);
-                }
-                return nodeIdMap[id];
+                const node = nodeIdMap[id];
+                if (!node) throw new CompressionError(`denormalisation failed for child ${id}`, n);
+                return node;
             });
         });
 
@@ -61,7 +59,12 @@ export default class VirtualDOM {
         // all parent nodes also appear changed on equalty
         // comparison
         const root = nodeIdMap[document.id];
-        depthFirstPostOrder(root, (n, children) => {
+        const result = depthFirstPostOrder(root, (n, children) => {
+            // make sure we're using any updated nodes returned from
+            // our children
+            n.childNodes = children;
+
+            // work out of any of our chidren were modified
             const modified = children.map(c => modifiedNodesMap[c.id]);
             const childWasModified = modified.reduce((a,b) => a||b, false);
             if (childWasModified) {
@@ -70,12 +73,11 @@ export default class VirtualDOM {
                 modifiedNodesMap[n.id] = true;
                 // if the node was modified or a child of the node was modified
                 // then we need to ensure the current node will fail equality checks
-                nodeIdMap[n.id] = { ...n, childNodes: children };
+                return { ...n };
             }
-            return nodeIdMap[n.id];
+            return n;
         });
-
-        return nodeIdMap[document.id];
+        return result;
     }
 
 }
