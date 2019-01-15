@@ -22,8 +22,8 @@ export default class VirtualDOM {
     }
 
     static applyPatch(document, patch) {
-        // first build an index of the nodes currently
-        // in the tree so we can quickly look them up.
+        // first build an index of the nodes id we need to
+        // update so we can quickly look them up.
         const nodeIdMap = {};
         depthFirst(document, n => {
             if (!n.id) console.warn('node missing id', n);
@@ -39,14 +39,15 @@ export default class VirtualDOM {
             else {
                 const existing = nodeIdMap[diff.id] || {};
                 nodeIdMap[diff.id] = { ...existing, ...diff };
-                modifiedNodesMap[diff.id] = nodeIdMap[diff.id];
+                modifiedNodesMap[diff.id] = true;
             }
         });
 
         // then make sure all the node id's in the childNodes
-        // array have been expanded into their denormalized form
-        Object.values(modifiedNodesMap).forEach(n => {
-            n.childNodes = (n.childNodes || []).map(child => {
+        // arrays have been expanded into their denormalized form
+        // and the childNodes arrays are using the modified nodes
+        Object.values(nodeIdMap).forEach(n => {
+            n.childNodes = (n.childNodes||[]).map(child => {
                 const id = child.id || child;
                 if (!nodeIdMap[id]) {
                     throw new CompressionError(`denormalisation failed for child ${id}`, n);

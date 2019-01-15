@@ -47,7 +47,19 @@ describe('VirtualDOM', function(){
         if (newRoot === startRoot) throw new Error('expecting root change due to propagation');
         if (newOne !== startOne) throw new Error('not expecting change to 1');
         if (newThree === startThree) throw new Error('expecting change to 3');
+        if (newThree.value !== 'THREE') throw new Error('expecting 3 value to be THREE');
         if (newFour !== startFour) throw new Error('not expecting change to 4');
+
+        dom.applyPatch([{id: 4, value:'FOUR'}]);
+
+        const newerRoot = dom.document;
+        const newerOne = newerRoot.childNodes[0];
+        const newerFour = newerOne.childNodes[0];
+
+        if (newerFour === startFour) throw new Error('expecting change to 4');
+        if (newerFour.value !== 'FOUR') throw new Error('expecting 4 value to be FOUR');
+        if (newerOne === startOne) throw new Error('expecting change to 1');
+        if (newerRoot === startRoot) throw new Error('expecting change to root');
     });
 
 });

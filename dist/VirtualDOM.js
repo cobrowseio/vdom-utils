@@ -95,8 +95,8 @@ function () {
   }], [{
     key: "applyPatch",
     value: function applyPatch(document, patch) {
-      // first build an index of the nodes currently
-      // in the tree so we can quickly look them up.
+      // first build an index of the nodes id we need to
+      // update so we can quickly look them up.
       var nodeIdMap = {};
       (0, _depthFirst.default)(document, function (n) {
         if (!n.id) console.warn('node missing id', n);else nodeIdMap[n.id] = n;
@@ -109,12 +109,13 @@ function () {
         if (!diff.id) console.warn('diff missing id', diff);else {
           var existing = nodeIdMap[diff.id] || {};
           nodeIdMap[diff.id] = _objectSpread({}, existing, diff);
-          modifiedNodesMap[diff.id] = nodeIdMap[diff.id];
+          modifiedNodesMap[diff.id] = true;
         }
       }); // then make sure all the node id's in the childNodes
-      // array have been expanded into their denormalized form
+      // arrays have been expanded into their denormalized form
+      // and the childNodes arrays are using the modified nodes
 
-      Object.values(modifiedNodesMap).forEach(function (n) {
+      Object.values(nodeIdMap).forEach(function (n) {
         n.childNodes = (n.childNodes || []).map(function (child) {
           var id = child.id || child;
 
