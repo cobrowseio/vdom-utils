@@ -46,7 +46,8 @@ export default class VirtualDOM {
         // then make sure all the node id's in the childNodes
         // arrays have been expanded into their denormalized form
         // and the childNodes arrays are using the modified nodes
-        Object.values(nodeIdMap).forEach(n => {
+        Object.keys(modifiedNodesMap).forEach(nid => {
+            const n = nodeIdMap[nid];
             n.childNodes = (n.childNodes||[]).map(child => {
                 const id = child.id || child;
                 if (!nodeIdMap[id]) {
@@ -60,18 +61,18 @@ export default class VirtualDOM {
         // all parent nodes also appear changed on equalty
         // comparison
         const root = nodeIdMap[document.id];
-        depthFirstPostOrder(root, (n, childResults) => {
-            const nodeWasModified = !!(modifiedNodesMap[n.id]);
-            const childWasModified = childResults.reduce((a,b) => a||b, false);
-            // if the node was modified or a child of the node was modified
-            // then we need to ensure the current node will fail equality checks
-            if (nodeWasModified || childWasModified) {
-                // rebuild the node with the latest child versions
-                nodeIdMap[n.id] = { ...n, childNodes: [...n.childNodes.map(c => nodeIdMap[c.id])] };
-                return true;
-            } else {
-                return false;
+        depthFirstPostOrder(root, (n, children) => {
+            const modified = children.map(c => modifiedNodesMap[c.id]);
+            const childWasModified = modified.reduce((a,b) => a||b, false);
+            if (childWasModified) {
+                // if a child was modified, we count as modified too, so make sure
+                // the ndoe is marked in the modification table
+                modifiedNodesMap[n.id] = true;
+                // if the node was modified or a child of the node was modified
+                // then we need to ensure the current node will fail equality checks
+                nodeIdMap[n.id] = { ...n, childNodes: children };
             }
+            return nodeIdMap[n.id];
         });
 
         return nodeIdMap[document.id];

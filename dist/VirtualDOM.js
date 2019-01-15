@@ -5,23 +5,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-require("core-js/modules/es6.string.iterator");
-
-require("core-js/modules/es6.array.from");
-
-require("core-js/modules/es6.regexp.to-string");
-
-require("core-js/modules/es6.date.to-string");
-
-require("core-js/modules/es7.symbol.async-iterator");
-
-require("core-js/modules/es6.symbol");
-
-require("core-js/modules/es6.array.is-array");
-
 require("core-js/modules/es6.array.filter");
-
-require("core-js/modules/es6.object.keys");
 
 require("core-js/modules/es6.object.define-property");
 
@@ -31,7 +15,7 @@ require("core-js/modules/es6.array.map");
 
 require("core-js/modules/es6.array.iterator");
 
-require("core-js/modules/es7.object.values");
+require("core-js/modules/es6.object.keys");
 
 require("core-js/modules/web.dom.iterable");
 
@@ -44,14 +28,6 @@ var _CompressionError = _interopRequireDefault(require("./CompressionError"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
-
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
-
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
-
-function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
-
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
 
@@ -115,7 +91,8 @@ function () {
       // arrays have been expanded into their denormalized form
       // and the childNodes arrays are using the modified nodes
 
-      Object.values(nodeIdMap).forEach(function (n) {
+      Object.keys(modifiedNodesMap).forEach(function (nid) {
+        var n = nodeIdMap[nid];
         n.childNodes = (n.childNodes || []).map(function (child) {
           var id = child.id || child;
 
@@ -130,24 +107,26 @@ function () {
       // comparison
 
       var root = nodeIdMap[document.id];
-      (0, _depthFirst.depthFirstPostOrder)(root, function (n, childResults) {
-        var nodeWasModified = !!modifiedNodesMap[n.id];
-        var childWasModified = childResults.reduce(function (a, b) {
+      (0, _depthFirst.depthFirstPostOrder)(root, function (n, children) {
+        var modified = children.map(function (c) {
+          return modifiedNodesMap[c.id];
+        });
+        var childWasModified = modified.reduce(function (a, b) {
           return a || b;
-        }, false); // if the node was modified or a child of the node was modified
-        // then we need to ensure the current node will fail equality checks
+        }, false);
 
-        if (nodeWasModified || childWasModified) {
-          // rebuild the node with the latest child versions
+        if (childWasModified) {
+          // if a child was modified, we count as modified too, so make sure
+          // the ndoe is marked in the modification table
+          modifiedNodesMap[n.id] = true; // if the node was modified or a child of the node was modified
+          // then we need to ensure the current node will fail equality checks
+
           nodeIdMap[n.id] = _objectSpread({}, n, {
-            childNodes: _toConsumableArray(n.childNodes.map(function (c) {
-              return nodeIdMap[c.id];
-            }))
+            childNodes: children
           });
-          return true;
-        } else {
-          return false;
         }
+
+        return nodeIdMap[n.id];
       });
       return nodeIdMap[document.id];
     }
