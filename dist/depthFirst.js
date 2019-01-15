@@ -3,7 +3,8 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = depthFirst;
+exports.default = depthFirstPreOrder;
+exports.depthFirstPostOrder = depthFirstPostOrder;
 
 require("core-js/modules/es6.array.for-each");
 
@@ -27,7 +28,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-function depthFirst(node, visitor) {
+function depthFirstPreOrder(node, visitor) {
   var skipChildren = false;
   var mapped = visitor(node, function () {
     skipChildren = true;
@@ -35,7 +36,15 @@ function depthFirst(node, visitor) {
   if (skipChildren || !node.childNodes) return mapped;
   return _objectSpread({}, mapped, {
     childNodes: Array.from(node.childNodes).map(function (child) {
-      return depthFirst(child, visitor);
+      return depthFirstPreOrder(child, visitor);
     })
   });
+}
+
+function depthFirstPostOrder(node, visitor) {
+  var children = Array.from(node.childNodes || []);
+  var childResults = children.map(function (child) {
+    return depthFirstPostOrder(child, visitor);
+  });
+  return visitor(node, childResults);
 }

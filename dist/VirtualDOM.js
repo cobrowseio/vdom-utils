@@ -25,6 +25,10 @@ require("core-js/modules/es6.object.keys");
 
 require("core-js/modules/es6.object.define-property");
 
+require("core-js/modules/es6.array.reduce");
+
+require("core-js/modules/es6.array.map");
+
 require("core-js/modules/es6.array.iterator");
 
 require("core-js/modules/es7.object.values");
@@ -33,11 +37,13 @@ require("core-js/modules/web.dom.iterable");
 
 require("core-js/modules/es6.array.for-each");
 
-var _depthFirst = _interopRequireDefault(require("./depthFirst"));
+var _depthFirst = _interopRequireWildcard(require("./depthFirst"));
 
 var _CompressionError = _interopRequireDefault(require("./CompressionError"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
 
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
 
@@ -93,40 +99,53 @@ function () {
       // in the tree so we can quickly look them up.
       var nodeIdMap = {};
       (0, _depthFirst.default)(document, function (n) {
-        if (!n.id) console.warning('node missing id', n);else nodeIdMap[n.id] = n;
+        if (!n.id) console.warn('node missing id', n);else nodeIdMap[n.id] = n;
       }); // then apply the diffs to the existing nodes,
       // and also create new node records for discovered
       // nodes if we need to.
 
+      var modifiedNodesMap = {};
       patch.forEach(function (diff) {
-        if (!diff.id) console.warning('diff missing id', diff);else {
+        if (!diff.id) console.warn('diff missing id', diff);else {
           var existing = nodeIdMap[diff.id] || {};
           nodeIdMap[diff.id] = _objectSpread({}, existing, diff);
+          modifiedNodesMap[diff.id] = nodeIdMap[diff.id];
         }
       }); // then make sure all the node id's in the childNodes
       // array have been expanded into their denormalized form
 
-      Object.values(nodeIdMap).forEach(function (n) {
-        n.childNodes = n.childNodes || [];
-
-        for (var i = 0; i < n.childNodes; i += 1) {
-          var child = n.childNodes[i]; // if child.id exists, the node hasn't been normalised
-          // so do it now.
-
-          if (child.id) {
-            // replace the object in the array with the id
-            n.childNodes[i] = child.id; // also make sure the array object equality check will
-            // return false on shallow comparison.
-
-            n.childNodes = _toConsumableArray(n.childNodes);
-          } // validate the child node actually exists
-
-
+      Object.values(modifiedNodesMap).forEach(function (n) {
+        n.childNodes = (n.childNodes || []).map(function (child) {
           var id = child.id || child;
 
           if (!nodeIdMap[id]) {
             throw new _CompressionError.default("denormalisation failed for child ".concat(id), n);
           }
+
+          return nodeIdMap[id];
+        });
+      }); // for all modified nodes we want to make sure
+      // all parent nodes also appear changed on equalty
+      // comparison
+
+      var root = nodeIdMap[document.id];
+      (0, _depthFirst.depthFirstPostOrder)(root, function (n, childResults) {
+        var nodeWasModified = !!modifiedNodesMap[n.id];
+        var childWasModified = childResults.reduce(function (a, b) {
+          return a || b;
+        }, false); // if the node was modified or a child of the node was modified
+        // then we need to ensure the current node will fail equality checks
+
+        if (nodeWasModified || childWasModified) {
+          // rebuild the node with the latest child versions
+          nodeIdMap[n.id] = _objectSpread({}, n, {
+            childNodes: _toConsumableArray(n.childNodes.map(function (c) {
+              return nodeIdMap[c.id];
+            }))
+          });
+          return true;
+        } else {
+          return false;
         }
       });
       return nodeIdMap[document.id];
