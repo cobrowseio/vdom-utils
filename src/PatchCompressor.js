@@ -35,10 +35,23 @@ export default class PatchCompressor {
         patch.forEach(diff => {
             this.state[diff.id] = {...this.state[diff.id], ...diff};
         });
+
+        // run a sanity check to log any compression errors
+        patch.forEach(diff => {
+            [...diff.childNodes].forEach(id => {
+                const inCompressed = this.state[id];
+                if (!inCompressed) console.warn('child not in compressed state', id, diff);
+            });
+        });
+    }
+
+    clearNodes(nodes=[]) {
+        nodes.forEach(id => {
+            this.state[id] = undefined;
+        });
     }
 
     clear() {
         this.state = {};
     }
-
 }
