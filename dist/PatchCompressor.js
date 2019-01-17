@@ -109,14 +109,16 @@ function () {
     value: function persist(patch) {
       var _this2 = this;
 
+      var nodes = {};
       patch.forEach(function (diff) {
         _this2.state[diff.id] = _objectSpread({}, _this2.state[diff.id], diff);
+        nodes[diff.id] = _objectSpread({}, nodes[diff.id], diff);
       }); // run a sanity check to log any compression errors
 
-      patch.forEach(function (diff) {
-        _toConsumableArray(diff.childNodes).forEach(function (id) {
+      Object.values(nodes).forEach(function (node) {
+        _toConsumableArray(node.childNodes).forEach(function (id) {
           var inCompressed = _this2.state[id];
-          if (!inCompressed) console.warn('child not in compressed state', id, diff);
+          if (!inCompressed) console.warn('child not in compressed state', id, node);
         });
       });
     }
