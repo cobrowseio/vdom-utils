@@ -7,7 +7,7 @@ var _PatchCompressor = _interopRequireDefault(require("./PatchCompressor"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 describe('PatchCompressor', function () {
-  it('should compress diffs', function (done) {
+  it('should compress diffs', function () {
     var patch = [{
       id: 1,
       thing: 1,
@@ -38,7 +38,7 @@ describe('PatchCompressor', function () {
       other: 1
     }];
     var compression = new _PatchCompressor.default();
-    var result = compression.compress(patch);
+    var result = compression.push(patch).compress();
     if (result.length !== 4) throw new Error('wrong number of nodes');
     var node1 = result.find(function (n) {
       return n.id === 1;
@@ -60,9 +60,8 @@ describe('PatchCompressor', function () {
     });
     if (node4.thing !== 1) throw new Error('wrong thing value for node 4');
     if (node4.other !== 1) throw new Error('wrong other value for node 4');
-    done();
   });
-  it('should clear attributes for null values', function (done) {
+  it('should clear attributes for null values', function () {
     var patch = [{
       id: 1,
       thing: 1,
@@ -77,7 +76,7 @@ describe('PatchCompressor', function () {
       thing: null
     }];
     var compression = new _PatchCompressor.default();
-    var result = compression.compress(patch);
+    var result = compression.push(patch).compress();
     if (result.length !== 2) throw new Error('wrong number of nodes');
     var node1 = result.find(function (n) {
       return n.id === 1;
@@ -85,6 +84,5 @@ describe('PatchCompressor', function () {
     if (node1.thing !== null) throw new Error('wrong thing value for node1');
     if (node1.other !== 2) throw new Error('wrong other value for node1');
     if (node1.childNodes.length !== 1) throw new Error('wrong child list value for node1');
-    done();
   });
 });

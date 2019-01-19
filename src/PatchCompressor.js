@@ -4,56 +4,64 @@ export default class PatchCompressor {
 
     constructor() {
         this.state = {};
+        this.modified = {};
     }
 
     difference(object, base) {
-        if (!base) return object;
-        return Object.keys(object).map(key => {
+        if (!base) return { ...object};
+        const changes =  Object.keys(object).map(key => {
             if (eq(object[key], base[key])) return false;
             return { [key]: object[key] };
-        }).filter(v => v).reduce((a,b,) => { return {...a,...b}; }, {});
+        }).filter(v => v);
+
+        // reduce back into an object
+        return changes.reduce((a,b) => { return {...a,...b}; }, {});
     }
 
-    compress(patch) {
-        const nodes = {};
-        patch.forEach(diff => {
-            // generate the newest node state for each node altered by the patch
-            nodes[diff.id] = {...nodes[diff.id], ...diff};
-        });
-
+    compress() {
         // then work out what's actually changed since the last state was persisted
-        const compressed = Object.values(nodes).map(node => {
-            const diff = this.difference(node, this.state[node.id]);
+        const compressed = Object.values(this.modified).map(modified => {
+            const diff = this.difference(modified, this.state[modified.id]);
             if (Object.keys(diff).length === 0) return false;
-            return { id: node.id, ...diff};
-        });
-
-        return Object.values(compressed).filter(v => v);
-    }
-
-    persist(patch) {
-        const nodes = {};
-        patch.forEach(diff => {
-            this.state[diff.id] = {...this.state[diff.id], ...diff};
-            nodes[diff.id] = {...nodes[diff.id], ...diff};
-        });
+            return { id: modified.id, ...diff };
+        }).filter(v => v);
 
         // run a sanity check to log any compression errors
-        Object.values(nodes).forEach(node => {
-            [...node.childNodes].forEach(id => {
-                const inCompressed = this.state[id];
+        compressed.forEach(node => {
+            (node.childNodes||[]).forEach(id => {
+                const inCompressed = this.state[id] || this.modified[id];
                 if (!inCompressed) console.warn('child not in compressed state', id, node);
             });
         });
+
+        return compressed;
     }
 
-    clearNodes(nodes=[]) {
-        nodes.forEach(id => {
-            this.state[id] = undefined;
+    mark() {
+        this.state = { ...this.state, ...this.modified };
+        this.modified = {};
+        return this;
+    }
+
+    push(patch) {
+        patch.forEach(diff => {
+            this.modified[diff.id] = {...this.state[diff.id], ...this.modified[diff.id], ...diff};
         });
+        return this;
     }
 
-    clear() {
+    remove(nodes=[]) {
+        nodes.forEach(id => {
+            delete this.state[id];
+            delete this.modified[id];
+        });
+        return this;
+    }
+
+    reset(newState=[]) {
         this.state = {};
+        this.modified = {};
+        this.push(newState);
+        return this;
     }
 }

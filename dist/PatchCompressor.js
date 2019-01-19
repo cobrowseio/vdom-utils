@@ -5,25 +5,13 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-require("core-js/modules/es6.string.iterator");
-
-require("core-js/modules/es6.array.from");
-
-require("core-js/modules/es6.regexp.to-string");
-
-require("core-js/modules/es6.date.to-string");
-
-require("core-js/modules/es7.symbol.async-iterator");
-
-require("core-js/modules/es6.symbol");
-
-require("core-js/modules/es6.array.is-array");
-
 require("core-js/modules/es6.object.define-property");
+
+require("core-js/modules/es6.array.for-each");
 
 require("core-js/modules/es7.object.values");
 
-require("core-js/modules/es6.array.for-each");
+require("core-js/modules/es6.array.reduce");
 
 require("core-js/modules/web.dom.iterable");
 
@@ -35,19 +23,9 @@ require("core-js/modules/es6.array.map");
 
 require("core-js/modules/es6.array.filter");
 
-require("core-js/modules/es6.array.reduce");
-
 var _fastDeepEqual = _interopRequireDefault(require("fast-deep-equal"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
-
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
-
-function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
-
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
 
@@ -66,76 +44,86 @@ function () {
     _classCallCheck(this, PatchCompressor);
 
     this.state = {};
+    this.modified = {};
   }
 
   _createClass(PatchCompressor, [{
     key: "difference",
     value: function difference(object, base) {
-      if (!base) return object;
-      return Object.keys(object).map(function (key) {
+      if (!base) return _objectSpread({}, object);
+      var changes = Object.keys(object).map(function (key) {
         if ((0, _fastDeepEqual.default)(object[key], base[key])) return false;
         return _defineProperty({}, key, object[key]);
       }).filter(function (v) {
         return v;
-      }).reduce(function (a, b) {
+      }); // reduce back into an object
+
+      return changes.reduce(function (a, b) {
         return _objectSpread({}, a, b);
       }, {});
     }
   }, {
     key: "compress",
-    value: function compress(patch) {
+    value: function compress() {
       var _this = this;
 
-      var nodes = {};
-      patch.forEach(function (diff) {
-        // generate the newest node state for each node altered by the patch
-        nodes[diff.id] = _objectSpread({}, nodes[diff.id], diff);
-      }); // then work out what's actually changed since the last state was persisted
-
-      var compressed = Object.values(nodes).map(function (node) {
-        var diff = _this.difference(node, _this.state[node.id]);
+      // then work out what's actually changed since the last state was persisted
+      var compressed = Object.values(this.modified).map(function (modified) {
+        var diff = _this.difference(modified, _this.state[modified.id]);
 
         if (Object.keys(diff).length === 0) return false;
         return _objectSpread({
-          id: node.id
+          id: modified.id
         }, diff);
-      });
-      return Object.values(compressed).filter(function (v) {
+      }).filter(function (v) {
         return v;
-      });
-    }
-  }, {
-    key: "persist",
-    value: function persist(patch) {
-      var _this2 = this;
-
-      var nodes = {};
-      patch.forEach(function (diff) {
-        _this2.state[diff.id] = _objectSpread({}, _this2.state[diff.id], diff);
-        nodes[diff.id] = _objectSpread({}, nodes[diff.id], diff);
       }); // run a sanity check to log any compression errors
 
-      Object.values(nodes).forEach(function (node) {
-        _toConsumableArray(node.childNodes).forEach(function (id) {
-          var inCompressed = _this2.state[id];
+      compressed.forEach(function (node) {
+        (node.childNodes || []).forEach(function (id) {
+          var inCompressed = _this.state[id] || _this.modified[id];
           if (!inCompressed) console.warn('child not in compressed state', id, node);
         });
       });
+      return compressed;
     }
   }, {
-    key: "clearNodes",
-    value: function clearNodes() {
+    key: "mark",
+    value: function mark() {
+      this.state = _objectSpread({}, this.state, this.modified);
+      this.modified = {};
+      return this;
+    }
+  }, {
+    key: "push",
+    value: function push(patch) {
+      var _this2 = this;
+
+      patch.forEach(function (diff) {
+        _this2.modified[diff.id] = _objectSpread({}, _this2.state[diff.id], _this2.modified[diff.id], diff);
+      });
+      return this;
+    }
+  }, {
+    key: "remove",
+    value: function remove() {
       var _this3 = this;
 
       var nodes = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
       nodes.forEach(function (id) {
-        _this3.state[id] = undefined;
+        delete _this3.state[id];
+        delete _this3.modified[id];
       });
+      return this;
     }
   }, {
-    key: "clear",
-    value: function clear() {
+    key: "reset",
+    value: function reset() {
+      var newState = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
       this.state = {};
+      this.modified = {};
+      this.push(newState);
+      return this;
     }
   }]);
 

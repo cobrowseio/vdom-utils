@@ -2,7 +2,7 @@ import PatchCompressor from './PatchCompressor';
 
 describe('PatchCompressor', function(){
 
-    it('should compress diffs', function(done) {
+    it('should compress diffs', function() {
         const patch = [
             {
                 id: 1, thing:1, other:2, childNodes: [2]
@@ -24,7 +24,7 @@ describe('PatchCompressor', function(){
             }
         ];
         const compression = new PatchCompressor();
-        const result = compression.compress(patch);
+        const result = compression.push(patch).compress();
         if (result.length !== 4) throw new Error('wrong number of nodes');
 
         const node1 = result.find(n => n.id === 1);
@@ -42,10 +42,9 @@ describe('PatchCompressor', function(){
         const node4 = result.find(n => n.id === 4);
         if (node4.thing !== 1) throw new Error('wrong thing value for node 4');
         if (node4.other !== 1) throw new Error('wrong other value for node 4');
-        done();
     });
 
-    it('should clear attributes for null values', function(done) {
+    it('should clear attributes for null values', function() {
         const patch = [
             {
                 id: 1, thing:1, other:2, childNodes: [2]
@@ -58,15 +57,13 @@ describe('PatchCompressor', function(){
             }
         ];
         const compression = new PatchCompressor();
-        const result = compression.compress(patch);
+        const result = compression.push(patch).compress();
         if (result.length !== 2) throw new Error('wrong number of nodes');
 
         const node1 = result.find(n => n.id === 1);
         if (node1.thing !== null) throw new Error('wrong thing value for node1');
         if (node1.other !== 2) throw new Error('wrong other value for node1');
         if (node1.childNodes.length !== 1) throw new Error('wrong child list value for node1');
-
-        done();
     });
 
 });
