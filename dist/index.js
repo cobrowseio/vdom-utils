@@ -5,12 +5,6 @@ require("core-js/modules/es6.object.define-property");
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-Object.defineProperty(exports, "DiffBatcher", {
-  enumerable: true,
-  get: function get() {
-    return _DiffBatcher.default;
-  }
-});
 Object.defineProperty(exports, "PatchCompressor", {
   enumerable: true,
   get: function get() {
@@ -47,8 +41,6 @@ Object.defineProperty(exports, "PropertyObserver", {
     return _PropertyObserver.default;
   }
 });
-
-var _DiffBatcher = _interopRequireDefault(require("./DiffBatcher"));
 
 var _PatchCompressor = _interopRequireDefault(require("./PatchCompressor"));
 

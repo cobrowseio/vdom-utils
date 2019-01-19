@@ -1,4 +1,3 @@
-import DiffBatcher from './DiffBatcher';
 import PatchCompressor from './PatchCompressor';
 import CompressionError from './CompressionError';
 import VirtualDOM from './VirtualDOM';
@@ -7,7 +6,6 @@ import isxdoc from './isxdoc';
 import PropertyObserver from './PropertyObserver';
 
 export {
-    DiffBatcher,
     PatchCompressor,
     CompressionError,
     VirtualDOM,
