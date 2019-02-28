@@ -29,13 +29,14 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 function depthFirstPreOrder(node, visitor) {
-  var skipChildren = false;
+  var children = node.childNodes;
   var mapped = visitor(node, function () {
-    skipChildren = true;
+    var replacementChildren = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+    children = replacementChildren;
   });
-  if (skipChildren || !node.childNodes) return mapped;
+  if (!children || !children.length) return mapped;
   return _objectSpread({}, mapped, {
-    childNodes: Array.from(node.childNodes).map(function (child) {
+    childNodes: Array.from(children).map(function (child) {
       return depthFirstPreOrder(child, visitor);
     })
   });

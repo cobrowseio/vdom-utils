@@ -29,6 +29,12 @@ Object.defineProperty(exports, "depthFirst", {
     return _depthFirst.default;
   }
 });
+Object.defineProperty(exports, "depthFirstPostOrder", {
+  enumerable: true,
+  get: function get() {
+    return _depthFirst.depthFirstPostOrder;
+  }
+});
 Object.defineProperty(exports, "isxdoc", {
   enumerable: true,
   get: function get() {
@@ -54,12 +60,14 @@ var _CompressionError = _interopRequireDefault(require("./CompressionError"));
 
 var _VirtualDOM = _interopRequireDefault(require("./VirtualDOM"));
 
-var _depthFirst = _interopRequireDefault(require("./depthFirst"));
+var _depthFirst = _interopRequireWildcard(require("./depthFirst"));
 
 var _isxdoc = _interopRequireDefault(require("./isxdoc"));
 
 var _parents = _interopRequireDefault(require("./parents"));
 
 var _PropertyObserver = _interopRequireDefault(require("./PropertyObserver"));
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }

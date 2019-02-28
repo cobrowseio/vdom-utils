@@ -1,12 +1,12 @@
 export default function depthFirstPreOrder(node, visitor) {
-    let skipChildren = false;
-    const mapped = visitor(node, () => { skipChildren = true; });
+    let children = node.childNodes;
+    const mapped = visitor(node, (replacementChildren=[]) => { children = replacementChildren; });
 
-    if (skipChildren || !node.childNodes) return mapped;
+    if ((!children) || (!children.length)) return mapped;
 
     return {
         ...mapped,
-        childNodes: Array.from(node.childNodes).map(child => {
+        childNodes: Array.from(children).map(child => {
             return depthFirstPreOrder(child, visitor);
         })
     };
