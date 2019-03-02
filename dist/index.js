@@ -5,12 +5,6 @@ require("core-js/modules/es6.object.define-property");
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-Object.defineProperty(exports, "PatchCompressor", {
-  enumerable: true,
-  get: function get() {
-    return _PatchCompressor.default;
-  }
-});
 Object.defineProperty(exports, "CompressionError", {
   enumerable: true,
   get: function get() {
@@ -53,8 +47,6 @@ Object.defineProperty(exports, "PropertyObserver", {
     return _PropertyObserver.default;
   }
 });
-
-var _PatchCompressor = _interopRequireDefault(require("./PatchCompressor"));
 
 var _CompressionError = _interopRequireDefault(require("./CompressionError"));
 
