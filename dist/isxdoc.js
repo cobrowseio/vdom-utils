@@ -13,15 +13,16 @@ require("core-js/modules/es6.date.to-string");
 
 function windowIsXdoc(window) {
   try {
-    return !window.document;
+    // try to access a property on the window
+    return !window.document && false;
   } catch (e) {
     return true;
   }
 }
 
 function isxdoc(node) {
-  if (node instanceof Window) {
-    return windowIsXdoc(node);
+  if (windowIsXdoc(node)) {
+    return true;
   } else if (node.tagName === 'IFRAME') {
     if (windowIsXdoc(node.contentWindow)) {
       return true; // we count blank iframes as cross document as newly added iframe
