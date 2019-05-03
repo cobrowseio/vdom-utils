@@ -6,6 +6,7 @@ export default class VirtualDOM {
     constructor(id) {
         this._id = id;
         this._dom = { id: id, childNodes:[] };
+        this._mapping = {};
     }
 
     get id() {
@@ -16,8 +17,14 @@ export default class VirtualDOM {
         return this._dom;
     }
 
+    node(id) {
+        return this._mapping[id];
+    }
+
     applyPatch(patch) {
-        this._dom = VirtualDOM.applyPatch(this._dom, patch);
+        const { dom, mapping } = VirtualDOM.applyPatch(this._dom, patch);
+        this._dom = dom;
+        this._mapping = mapping;
         return this;
     }
 
@@ -73,11 +80,15 @@ export default class VirtualDOM {
                 modifiedNodesMap[n.id] = true;
                 // if the node was modified or a child of the node was modified
                 // then we need to ensure the current node will fail equality checks
-                return { ...n };
+                const updated = { ...n };
+                nodeIdMap[n.id] = updated;
+                return updated;
             }
             return n;
         });
-        return result;
+
+        // retain the latest node id mapping for quick lookups
+        return { dom: result, mapping: nodeIdMap };
     }
 
 }

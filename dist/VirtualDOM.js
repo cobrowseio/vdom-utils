@@ -52,12 +52,23 @@ function () {
       id: id,
       childNodes: []
     };
+    this._mapping = {};
   }
 
   _createClass(VirtualDOM, [{
+    key: "node",
+    value: function node(id) {
+      return this._mapping[id];
+    }
+  }, {
     key: "applyPatch",
     value: function applyPatch(patch) {
-      this._dom = VirtualDOM.applyPatch(this._dom, patch);
+      var _VirtualDOM$applyPatc = VirtualDOM.applyPatch(this._dom, patch),
+          dom = _VirtualDOM$applyPatc.dom,
+          mapping = _VirtualDOM$applyPatc.mapping;
+
+      this._dom = dom;
+      this._mapping = mapping;
       return this;
     }
   }, {
@@ -123,12 +134,19 @@ function () {
           modifiedNodesMap[n.id] = true; // if the node was modified or a child of the node was modified
           // then we need to ensure the current node will fail equality checks
 
-          return _objectSpread({}, n);
+          var updated = _objectSpread({}, n);
+
+          nodeIdMap[n.id] = updated;
+          return updated;
         }
 
         return n;
-      });
-      return result;
+      }); // retain the latest node id mapping for quick lookups
+
+      return {
+        dom: result,
+        mapping: nodeIdMap
+      };
     }
   }]);
 

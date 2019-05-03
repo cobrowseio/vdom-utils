@@ -90,4 +90,12 @@ describe('VirtualDOM', function(){
         if (newOne.childNodes.map(n => n.id).join(' ') !== [4,5].join(' ')) throw new Error('wrong child nodes');
     });
 
+    it('should provide a node lookup function', function() {
+        dom.applyPatch(patch);
+        dom.applyPatch([{ id: 5, childNodes:[]}, {id:1, childNodes:[4]}, {id:1, childNodes:[4, 5]}, {id:1, childNodes:[4]}, {id:1, childNodes:[4,5]}]);
+        depthFirst(dom.document, node => {
+            if (dom.node(node.id) !== node) throw new Error('incorrect node mapping');
+        });
+    });
+
 });
