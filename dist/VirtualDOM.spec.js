@@ -160,4 +160,27 @@ describe('VirtualDOM', function () {
       if (dom.node(node.id) !== node) throw new Error('incorrect node mapping');
     });
   });
+  it('should not allow lookup of invalid nodes', function () {
+    dom.applyPatch(patch);
+    dom.applyPatch([{
+      id: 5,
+      childNodes: []
+    }, {
+      id: 1,
+      childNodes: [4]
+    }, {
+      id: 1,
+      childNodes: [4, 5]
+    }, {
+      id: 1,
+      childNodes: [4]
+    }, {
+      id: 1,
+      childNodes: [4, 5]
+    }, {
+      id: 'invalid',
+      childNodes: [4, 5]
+    }]);
+    if (dom.node('invalid')) throw new Error('invalid node returned');
+  });
 });

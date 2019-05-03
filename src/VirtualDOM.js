@@ -28,14 +28,19 @@ export default class VirtualDOM {
         return this;
     }
 
+    static createMapping(node) {
+        const mapping = {};
+        depthFirst(node, n => {
+            if (!n.id) console.warn('node missing id', n);
+            else mapping[n.id] = n;
+        });
+        return mapping;
+    }
+
     static applyPatch(document, patch) {
         // first build an index of the nodes id we need to
         // update so we can quickly look them up.
-        const nodeIdMap = {};
-        depthFirst(document, n => {
-            if (!n.id) console.warn('node missing id', n);
-            else nodeIdMap[n.id] = n;
-        });
+        const nodeIdMap = this.createMapping(document);
 
         // then apply the diffs to the existing nodes,
         // and also create new node records for discovered
@@ -88,7 +93,7 @@ export default class VirtualDOM {
         });
 
         // retain the latest node id mapping for quick lookups
-        return { dom: result, mapping: nodeIdMap };
+        return { dom: result, mapping: this.createMapping(result) };
     }
 
 }
