@@ -1,12 +1,14 @@
 "use strict";
 
-require("core-js/modules/es6.array.map");
+require("core-js/modules/es.array.join");
+
+require("core-js/modules/es.array.map");
 
 var _depthFirst = _interopRequireDefault(require("./depthFirst"));
 
 var _VirtualDOM = _interopRequireDefault(require("./VirtualDOM"));
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 describe('VirtualDOM', function () {
   var patch = [{
@@ -28,7 +30,7 @@ describe('VirtualDOM', function () {
   }];
   var dom;
   beforeEach(function () {
-    dom = new _VirtualDOM.default('root');
+    dom = new _VirtualDOM["default"]('root');
   });
   it('should allow basic patching', function () {
     dom.applyPatch([{
@@ -40,7 +42,7 @@ describe('VirtualDOM', function () {
   it('should build a tree from patches', function () {
     dom.applyPatch(patch);
     var nodes = [];
-    (0, _depthFirst.default)(dom.document, function (n) {
+    (0, _depthFirst["default"])(dom.document, function (n) {
       nodes.push(n.id);
     });
     if (nodes.join(' ') !== ['root', 1, 4, 2, 3].join(' ')) throw new Error('wrong nodes');
@@ -156,7 +158,7 @@ describe('VirtualDOM', function () {
       id: 1,
       childNodes: [4, 5]
     }]);
-    (0, _depthFirst.default)(dom.document, function (node) {
+    (0, _depthFirst["default"])(dom.document, function (node) {
       if (dom.node(node.id) !== node) throw new Error('incorrect node mapping');
     });
   });

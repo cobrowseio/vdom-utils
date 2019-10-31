@@ -4,21 +4,21 @@ require("should");
 
 var _PropertyObserver = _interopRequireDefault(require("./PropertyObserver"));
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 describe('PropertyObserver', function () {
   it('should allow construction', function () {
-    var observer = new _PropertyObserver.default(function () {});
+    var observer = new _PropertyObserver["default"](function () {});
     observer.disconnect();
   });
   it('should allow observation of a property', function () {
-    var observer = new _PropertyObserver.default(function () {});
+    var observer = new _PropertyObserver["default"](function () {});
     observer.observe(HTMLInputElement, 'value');
     observer.disconnect();
   });
   it('should trigger on value setting', function (done) {
     document.body.innerHTML = '<input type="text" />';
-    var observer = new _PropertyObserver.default(function (el, property, value) {
+    var observer = new _PropertyObserver["default"](function (el, property, value) {
       el.tagName.should.equal('INPUT');
       property.should.equal('value');
       value.should.equal('test');
@@ -30,7 +30,7 @@ describe('PropertyObserver', function () {
   });
   it('should trigger on value setting of non-overidden properties', function (done) {
     document.body.innerHTML = '<input type="text" />';
-    var observer = new _PropertyObserver.default(function (el, property, value) {
+    var observer = new _PropertyObserver["default"](function (el, property, value) {
       el.tagName.should.equal('INPUT');
       property.should.equal('checked');
       value.should.equal('test');
@@ -56,9 +56,9 @@ describe('PropertyObserver', function () {
       }
     }
 
-    observer1 = new _PropertyObserver.default(onSet);
+    observer1 = new _PropertyObserver["default"](onSet);
     observer1.observe(HTMLInputElement, 'value');
-    observer2 = new _PropertyObserver.default(onSet);
+    observer2 = new _PropertyObserver["default"](onSet);
     observer2.observe(HTMLInputElement, 'value');
     document.body.childNodes[0].value = 'test';
   });

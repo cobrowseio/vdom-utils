@@ -1,11 +1,11 @@
 "use strict";
 
+require("core-js/modules/es.object.define-property");
+
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
-
-require("core-js/modules/es6.object.define-property");
+exports["default"] = void 0;
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -38,4 +38,4 @@ function () {
   return CompressionError;
 }();
 
-exports.default = CompressionError;
+exports["default"] = CompressionError;

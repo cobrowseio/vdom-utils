@@ -1,11 +1,11 @@
 "use strict";
 
-require("core-js/modules/es6.object.define-property");
+require("core-js/modules/es.object.define-property");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = isxdoc;
+exports["default"] = isxdoc;
 
 function windowIsXdoc(window) {
   try {

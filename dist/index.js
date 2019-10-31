@@ -1,6 +1,18 @@
 "use strict";
 
-require("core-js/modules/es6.object.define-property");
+require("core-js/modules/es.array.iterator");
+
+require("core-js/modules/es.object.define-property");
+
+require("core-js/modules/es.object.get-own-property-descriptor");
+
+require("core-js/modules/es.object.to-string");
+
+require("core-js/modules/es.string.iterator");
+
+require("core-js/modules/es.weak-map");
+
+require("core-js/modules/web.dom-collections.iterator");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -8,19 +20,19 @@ Object.defineProperty(exports, "__esModule", {
 Object.defineProperty(exports, "CompressionError", {
   enumerable: true,
   get: function get() {
-    return _CompressionError.default;
+    return _CompressionError["default"];
   }
 });
 Object.defineProperty(exports, "VirtualDOM", {
   enumerable: true,
   get: function get() {
-    return _VirtualDOM.default;
+    return _VirtualDOM["default"];
   }
 });
 Object.defineProperty(exports, "depthFirst", {
   enumerable: true,
   get: function get() {
-    return _depthFirst.default;
+    return _depthFirst["default"];
   }
 });
 Object.defineProperty(exports, "depthFirstPostOrder", {
@@ -32,19 +44,19 @@ Object.defineProperty(exports, "depthFirstPostOrder", {
 Object.defineProperty(exports, "isxdoc", {
   enumerable: true,
   get: function get() {
-    return _isxdoc.default;
+    return _isxdoc["default"];
   }
 });
 Object.defineProperty(exports, "parents", {
   enumerable: true,
   get: function get() {
-    return _parents.default;
+    return _parents["default"];
   }
 });
 Object.defineProperty(exports, "PropertyObserver", {
   enumerable: true,
   get: function get() {
-    return _PropertyObserver.default;
+    return _PropertyObserver["default"];
   }
 });
 
@@ -60,6 +72,8 @@ var _parents = _interopRequireDefault(require("./parents"));
 
 var _PropertyObserver = _interopRequireDefault(require("./PropertyObserver"));
 
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function _getRequireWildcardCache() { return cache; }; return cache; }
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; if (obj != null) { var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }

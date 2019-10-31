@@ -1,21 +1,27 @@
 "use strict";
 
+require("core-js/modules/es.array.for-each");
+
+require("core-js/modules/es.array.iterator");
+
+require("core-js/modules/es.object.define-property");
+
+require("core-js/modules/es.object.get-own-property-descriptor");
+
+require("core-js/modules/es.object.to-string");
+
+require("core-js/modules/es.set");
+
+require("core-js/modules/es.string.iterator");
+
+require("core-js/modules/web.dom-collections.for-each");
+
+require("core-js/modules/web.dom-collections.iterator");
+
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
-
-require("core-js/modules/es6.object.define-property");
-
-require("core-js/modules/es6.array.for-each");
-
-require("core-js/modules/web.dom.iterable");
-
-require("core-js/modules/es6.array.iterator");
-
-require("core-js/modules/es6.string.iterator");
-
-require("core-js/modules/es6.set");
+exports["default"] = void 0;
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -44,7 +50,7 @@ function () {
     key: "_untrackObserver",
     value: function _untrackObserver(Klass) {
       if (Klass.__cbio_observers) {
-        Klass.__cbio_observers.delete(this);
+        Klass.__cbio_observers["delete"](this);
       }
     }
   }, {
@@ -94,4 +100,4 @@ function () {
   return PropertyObserver;
 }();
 
-exports.default = PropertyObserver;
+exports["default"] = PropertyObserver;

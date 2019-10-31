@@ -1,22 +1,44 @@
 "use strict";
 
-require("core-js/modules/es6.array.for-each");
+require("core-js/modules/es.symbol");
 
-require("core-js/modules/es6.array.filter");
+require("core-js/modules/es.array.filter");
 
-require("core-js/modules/web.dom.iterable");
+require("core-js/modules/es.array.for-each");
 
-require("core-js/modules/es6.array.iterator");
+require("core-js/modules/es.array.iterator");
 
-require("core-js/modules/es6.object.keys");
+require("core-js/modules/es.array.join");
 
-require("core-js/modules/es6.object.define-property");
+require("core-js/modules/es.object.define-properties");
+
+require("core-js/modules/es.object.define-property");
+
+require("core-js/modules/es.object.get-own-property-descriptor");
+
+require("core-js/modules/es.object.get-own-property-descriptors");
+
+require("core-js/modules/es.object.keys");
+
+require("core-js/modules/es.object.to-string");
+
+require("core-js/modules/es.string.iterator");
+
+require("core-js/modules/es.weak-map");
+
+require("core-js/modules/web.dom-collections.for-each");
+
+require("core-js/modules/web.dom-collections.iterator");
 
 var _depthFirst = _interopRequireWildcard(require("./depthFirst"));
 
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function _getRequireWildcardCache() { return cache; }; return cache; }
 
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; if (obj != null) { var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(source).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
@@ -38,14 +60,14 @@ describe('depthFirst', function () {
   };
   it('should traverse a tree', function () {
     var progress = 0;
-    (0, _depthFirst.default)(tree, function (node) {
+    (0, _depthFirst["default"])(tree, function (node) {
       if (progress >= node.id) throw new Error("wrong order ".concat(node.id));
       progress = node.id;
     });
   });
   it('should allow skipping subtrees', function () {
     var nodes = 0;
-    (0, _depthFirst.default)(tree, function (node, skip) {
+    (0, _depthFirst["default"])(tree, function (node, skip) {
       nodes += 1;
       skip();
     });
@@ -53,18 +75,18 @@ describe('depthFirst', function () {
   });
   it('should allow pre order traversal', function () {
     var order = [];
-    (0, _depthFirst.default)(tree, function (node) {
+    (0, _depthFirst["default"])(tree, function (node) {
       order.push(node.id);
     });
     if (order.join(' ') !== [1, 2, 3, 4, 5].join(' ')) throw new Error('arrays not equal');
   });
   it('should allow pre order mapping', function () {
-    var mapped = (0, _depthFirst.default)(tree, function (node) {
+    var mapped = (0, _depthFirst["default"])(tree, function (node) {
       return _objectSpread({}, node, {
         mapped: true
       });
     });
-    (0, _depthFirst.default)(mapped, function (node) {
+    (0, _depthFirst["default"])(mapped, function (node) {
       if (!node.mapped) throw new Error('expecting all nodes to have been mapped');
     });
   });
