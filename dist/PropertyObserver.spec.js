@@ -42,8 +42,8 @@ describe('PropertyObserver', function () {
   });
   it('should support multiple observers', function (done) {
     document.body.innerHTML = '<input type="text" />';
-    var observer1;
-    var observer2;
+    var observer1 = new _PropertyObserver["default"](onSet);
+    var observer2 = new _PropertyObserver["default"](onSet);
     var count = 0;
 
     function onSet() {
@@ -56,9 +56,7 @@ describe('PropertyObserver', function () {
       }
     }
 
-    observer1 = new _PropertyObserver["default"](onSet);
     observer1.observe(HTMLInputElement, 'value');
-    observer2 = new _PropertyObserver["default"](onSet);
     observer2.observe(HTMLInputElement, 'value');
     document.body.childNodes[0].value = 'test';
   });
