@@ -1,8 +1,8 @@
 "use strict";
 
-require("core-js/modules/es.array.join");
+require("core-js/modules/es.array.join.js");
 
-require("core-js/modules/es.array.map");
+require("core-js/modules/es.array.map.js");
 
 var _depthFirst = _interopRequireDefault(require("./depthFirst"));
 

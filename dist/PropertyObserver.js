@@ -1,22 +1,22 @@
 "use strict";
 
-require("core-js/modules/es.array.for-each");
+require("core-js/modules/es.array.for-each.js");
 
-require("core-js/modules/es.array.iterator");
+require("core-js/modules/es.array.iterator.js");
 
-require("core-js/modules/es.object.define-property");
+require("core-js/modules/es.object.define-property.js");
 
-require("core-js/modules/es.object.get-own-property-descriptor");
+require("core-js/modules/es.object.get-own-property-descriptor.js");
 
-require("core-js/modules/es.object.to-string");
+require("core-js/modules/es.object.to-string.js");
 
-require("core-js/modules/es.set");
+require("core-js/modules/es.set.js");
 
-require("core-js/modules/es.string.iterator");
+require("core-js/modules/es.string.iterator.js");
 
-require("core-js/modules/web.dom-collections.for-each");
+require("core-js/modules/web.dom-collections.for-each.js");
 
-require("core-js/modules/web.dom-collections.iterator");
+require("core-js/modules/web.dom-collections.iterator.js");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -29,9 +29,7 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-var PropertyObserver =
-/*#__PURE__*/
-function () {
+var PropertyObserver = /*#__PURE__*/function () {
   function PropertyObserver(onPropertySet) {
     _classCallCheck(this, PropertyObserver);
 

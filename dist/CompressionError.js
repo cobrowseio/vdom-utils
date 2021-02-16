@@ -1,6 +1,6 @@
 "use strict";
 
-require("core-js/modules/es.object.define-property");
+require("core-js/modules/es.object.define-property.js");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -13,9 +13,7 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-var CompressionError =
-/*#__PURE__*/
-function () {
+var CompressionError = /*#__PURE__*/function () {
   function CompressionError(message, node) {
     _classCallCheck(this, CompressionError);
 
