@@ -7,7 +7,7 @@
   "scripts": {
     "build": "babel src --out-dir dist",
     "prepublishOnly": "npm run build",
-    "lint": "eslint --ext .js .",
+    "lint": "standard",
     "test": "karma start --single-run --browsers ChromeHeadless karma.conf.js",
     "test-dev": "npm run-script lint && karma start --browsers Chrome karma.conf.js"
   },
@@ -40,6 +40,16 @@
     "build"
   ],
   "dependencies": {
-    "core-js": "^3.8.3"
+    "core-js": "^3.8.3",
+    "standard": "^16.0.3"
+  },
+  "standard": {
+    "env": [
+      "browser",
+      "mocha"
+    ],
+    "ignore": [
+      "dist/*"
+    ]
   }
 }
