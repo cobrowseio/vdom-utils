@@ -1,11 +1,11 @@
 "use strict";
 
-require("core-js/modules/es.object.define-property.js");
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports["default"] = void 0;
+
+require("core-js/modules/es.object.define-property.js");
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 

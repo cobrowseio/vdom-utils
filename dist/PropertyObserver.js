@@ -1,27 +1,27 @@
 "use strict";
 
-require("core-js/modules/es.array.for-each.js");
-
-require("core-js/modules/es.array.iterator.js");
-
-require("core-js/modules/es.object.define-property.js");
-
-require("core-js/modules/es.object.get-own-property-descriptor.js");
-
-require("core-js/modules/es.object.to-string.js");
-
-require("core-js/modules/es.set.js");
-
-require("core-js/modules/es.string.iterator.js");
-
-require("core-js/modules/web.dom-collections.for-each.js");
-
-require("core-js/modules/web.dom-collections.iterator.js");
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports["default"] = void 0;
+
+require("core-js/modules/es.set.js");
+
+require("core-js/modules/es.object.to-string.js");
+
+require("core-js/modules/es.string.iterator.js");
+
+require("core-js/modules/es.array.iterator.js");
+
+require("core-js/modules/web.dom-collections.iterator.js");
+
+require("core-js/modules/es.object.get-own-property-descriptor.js");
+
+require("core-js/modules/es.array.for-each.js");
+
+require("core-js/modules/web.dom-collections.for-each.js");
+
+require("core-js/modules/es.object.define-property.js");
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
