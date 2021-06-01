@@ -1,7 +1,7 @@
 {
   "name": "vdom-utils",
   "private": true,
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Virtual DOM manipulation utils",
   "main": "./dist/index.js",
   "scripts": {
